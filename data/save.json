@@ -1,0 +1,38 @@
+{
+    "name": "Пипидастр",
+    "unit_class": "Шаман",
+    "sex": "male",
+    "lvl": 15,
+    "exp": 18,
+    "health": 28,
+    "max_health": 28,
+    "strength": 5,
+    "intelligence": 18,
+    "armor": 2,
+    "resistance": 15,
+    "speed": 9,
+    "skill": 12,
+    "luck": 6,
+    "constitution": 6,
+    "growth_rates": {
+        "health": 55,
+        "strength": 20,
+        "intelligence": 85,
+        "resistance": 70,
+        "speed": 10,
+        "skill": 20,
+        "luck": 10
+    },
+    "hands": null,
+    "inventory": {
+        "slots": [
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "currency": 0
+    },
+    "type": "Shaman"
+}
