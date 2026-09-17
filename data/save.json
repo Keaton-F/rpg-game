@@ -1,29 +1,33 @@
 {
-    "name": "Пипидастр",
-    "unit_class": "Шаман",
+    "name": "Чубзик",
+    "unit_class": "Мечник",
     "sex": "male",
-    "lvl": 15,
-    "exp": 18,
-    "health": 28,
-    "max_health": 28,
-    "strength": 5,
-    "intelligence": 18,
-    "armor": 2,
-    "resistance": 15,
-    "speed": 9,
-    "skill": 12,
-    "luck": 6,
-    "constitution": 6,
+    "lvl": 2,
+    "exp": 43,
+    "health": 18,
+    "max_health": 18,
+    "strength": 7,
+    "intelligence": 2,
+    "armor": 1,
+    "resistance": 2,
+    "speed": 10,
+    "skill": 10,
+    "luck": 2,
+    "constitution": 5,
     "growth_rates": {
-        "health": 55,
-        "strength": 20,
-        "intelligence": 85,
-        "resistance": 70,
-        "speed": 10,
-        "skill": 20,
-        "luck": 10
+        "health": 45,
+        "strength": 55,
+        "intelligence": 5,
+        "armor": 20,
+        "resistance": 10,
+        "speed": 75,
+        "skill": 75,
+        "luck": 15
     },
-    "hands": null,
+    "hands": {
+        "id": "sword",
+        "durability": 25
+    },
     "inventory": {
         "slots": [
             null,
@@ -34,5 +38,5 @@
         ],
         "currency": 0
     },
-    "type": "Shaman"
+    "type": "Swordsman"
 }

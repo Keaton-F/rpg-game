@@ -5,12 +5,11 @@ from src.items import Weapon
 def create_player_from_input():
     """
     Запрашивает у пользователя данные нового персонажа
-    и создаёт его через переданный класс.
+    и возвращает выбранный класс, имя и пол персонажа.
     """
     print("""
 На данный момент, это игровое пространство будет напоминать всего-лишь
 дуэль в абстрактной и абсолютно ровной местности.
-
 Вам предстоит создать своего персонажа.
 """)
 
@@ -47,7 +46,6 @@ def create_player_from_input():
 
         if 1 <= user_input <= len(CHARACTER_CLASSES):
             selected_class = list(CHARACTER_CLASSES.values())[user_input - 1]
-
             class_name = list(CHARACTER_CLASSES.keys())[user_input - 1]
 
             print(f"Выбран класс {class_name}.")
@@ -60,19 +58,21 @@ def create_player_from_input():
 
 def show_statistics(player):
     """
-    Выводит статистику персонажа.
+    Выводит полную статистику персонажа.
+
+    Отображает основные данные персонажа, его характеристики,
+    текущее оружие и количество денег.
     """
     hands = player.hands.name if player.hands else "Пусто"
 
     print(f"""
 ========================================
-             СТАТИСТИКА
+              СТАТИСТИКА
 ========================================
 {"Имя:":<17}{player.name}
 {"Класс:":<17}{player.unit_class}
 {"Уровень:":<17}{player.lvl}
 {"Опыт:":<17}{player.exp}/100
-
 {"Здоровье:":<17}{player.health}/{player.max_health}
 {"Сила:":<17}{player.strength}
 {"Интеллект:":<17}{player.intelligence}
@@ -82,21 +82,71 @@ def show_statistics(player):
 {"Навык:":<17}{player.skill}
 {"Удача:":<17}{player.luck}
 {"Конституция:":<17}{player.constitution}
-
-Сейчас в руках: {hands}
+{"Сейчас в руках:":<17}{hands}
+{"Деньги:":<17}{player.inventory.currency}
 ========================================
 """)
 
     input("Нажми Enter, чтобы вернуться в меню.")
 
 
-def show_inventory(player):
+def show_battle_analysis(player, enemy):
     """
-    Открывает меню инвентаря персонажа.
+    Выводит сравнительную информацию о персонаже игрока и противнике.
 
-    Позволяет просматривать содержимое инвентаря, деньги,
-    экипированное оружие, снимать оружие с рук и экипировать
-    оружие из выбранной ячейки.
+    Отображает имена, классы, уровни, опыт, здоровье, все характеристики,
+    оружие в руках, его текущую и максимальную прочность и количество
+    денег обоих персонажей.
+
+    Функция используется непосредственно во время сражения
+    и не изменяет состояние персонажей.
+    """
+    player_weapon = player.hands.name if player.hands else "Пусто"
+    enemy_weapon = enemy.hands.name if enemy.hands else "Пусто"
+
+    player_durability = f"{player.hands.durability}/{player.hands.max_durability}" if player.hands else "-"
+    enemy_durability = f"{enemy.hands.durability}/{enemy.hands.max_durability}" if enemy.hands else "-"
+
+    print(f"""
+========================================
+          АНАЛИЗ ПРОТИВНИКА
+========================================
+{"":<16}{"ИГРОК":<10}{"|":^4}{"ПРОТИВНИК":<10}
+{"Имя:":<16}{player.name:<10}{"|":^4}{enemy.name:<10}
+{"Класс:":<16}{player.unit_class:<10}{"|":^4}{enemy.unit_class:<10}
+{"Уровень:":<16}{player.lvl:<10}{"|":^4}{enemy.lvl:<10}
+{"Опыт:":<16}{player.exp:<10}{"|":^4}{enemy.exp:<10}
+{"ОЗ:":<16}{f"{player.health}/{player.max_health}":<10}{"|":^4}{f"{enemy.health}/{enemy.max_health}":<10}
+----------------------------------------
+{"Сила:":<16}{player.strength:<10}{"|":^4}{enemy.strength:<10}
+{"Интеллект:":<16}{player.intelligence:<10}{"|":^4}{enemy.intelligence:<10}
+{"Броня:":<16}{player.armor:<10}{"|":^4}{enemy.armor:<10}
+{"Сопротивление:":<16}{player.resistance:<10}{"|":^4}{enemy.resistance:<10}
+{"Скорость:":<16}{player.speed:<10}{"|":^4}{enemy.speed:<10}
+{"Навык:":<16}{player.skill:<10}{"|":^4}{enemy.skill:<10}
+{"Удача:":<16}{player.luck:<10}{"|":^4}{enemy.luck:<10}
+{"Конституция:":<16}{player.constitution:<10}{"|":^4}{enemy.constitution:<10}
+----------------------------------------
+{"Оружие:":<16}{player_weapon:<10}{"|":^4}{enemy_weapon:<10}
+{"Прочность:":<16}{player_durability:<10}{"|":^4}{enemy_durability:<10}
+{"Деньги:":<16}{player.inventory.currency:<10}{"|":^4}{enemy.inventory.currency:<10}
+========================================
+""")
+
+    input("Нажми Enter, чтобы вернуться к бою.")
+
+
+def show_inventory(player, in_battle=False):
+    """
+    Открывает универсальное меню инвентаря персонажа.
+
+    Позволяет просматривать содержимое слотов, открывать информацию
+    о предметах, экипировать оружие и перемещать предмет из рук
+    в выбранный пустой слот.
+
+    Возвращает:
+        bool: True, если в бою было совершено действие,
+        расходующее ход. Иначе False.
     """
     while True:
         print("""
@@ -109,11 +159,7 @@ def show_inventory(player):
             player.inventory.slots,
             start=1,
         ):
-            if item is None:
-                item_name = "Пусто"
-            else:
-                item_name = item.name
-
+            item_name = item.name if item else "Пусто"
             print(f"{number}. {item_name}")
 
         print(f"""
@@ -121,91 +167,174 @@ def show_inventory(player):
 Деньги: {player.inventory.currency}
 В руках: {player.hands.name if player.hands else "Пусто"}
 ----------------------------------------
-
-6. Снять оружие с рук
-7. Экипировать оружие
-8. Выйти
+6. Выйти
 ========================================
 """)
 
-        choice = input("Выбери действие: ")
+        choice = input("Выбери ячейку: ")
 
         if choice == "6":
-            unequip_weapon(player)
+            return False
 
-        elif choice == "7":
-            equip_weapon(player)
+        try:
+            slot_number = int(choice)
+        except ValueError:
+            print("Ошибка ввода: необходимо ввести номер ячейки.")
+            continue
 
-        elif choice == "8":
-            return
+        if not 1 <= slot_number <= len(player.inventory.slots):
+            print("Ошибка ввода: такой ячейки нет.")
+            continue
 
-        else:
-            print("Ошибка ввода: такого действия нет.")
+        slot_index = slot_number - 1
+        item = player.inventory.slots[slot_index]
 
-
-def unequip_weapon(player):
-    """
-    Снимает оружие с рук и помещает его в первую свободную
-    ячейку инвентаря.
-    """
-    if player.hands is None:
-        print("\nВ руках ничего нет.")
-        return
-
-    empty_slot = None
-
-    for number, item in enumerate(player.inventory.slots):
         if item is None:
-            empty_slot = number
-            break
+            turn_spent = handle_empty_slot(player, slot_index)
+        else:
+            turn_spent = show_item_details(player, slot_index)
 
-    if empty_slot is None:
-        print("\nНет свободного места в инвентаре.")
-        return
-
-    player.inventory.slots[empty_slot] = player.hands
-    player.hands = None
-
-    print(f"\nОружие убрано в ячейку " f"{empty_slot + 1}.")
+        if in_battle and turn_spent:
+            return True
 
 
-def equip_weapon(player):
+def show_item_details(player, slot_index):
     """
-    Позволяет выбрать оружие из инвентаря и экипировать его.
-
-    Если в руках уже есть оружие, оно меняется местами
-    с выбранным предметом в инвентаре.
+    Показывает характеристики предмета и доступные действия.
+    Возвращает:
+        bool: True, если было совершено действие, расходующее ход.
+        Иначе False.
     """
-    try:
-        slot_number = int(input("\nВведи номер ячейки оружия: "))
-    except ValueError:
-        print("Ошибка ввода: необходимо ввести целое число.")
-        return
-
-    if not 1 <= slot_number <= len(player.inventory.slots):
-        print("Ошибка ввода: такой ячейки нет.")
-        return
-
-    slot_index = slot_number - 1
     item = player.inventory.slots[slot_index]
 
-    if item is None:
-        print("Эта ячейка пуста.")
-        return
+    print(f"""========================================
+             ИНФОРМАЦИЯ
+========================================
+{"ID:":<20}{item.item_id}
+{"Название:":<20}{item.name}
+{"Прочность:":<20}{item.durability}/{item.max_durability}
+""")
 
-    if not isinstance(item, Weapon):
-        print("Этот предмет нельзя экипировать как оружие.")
-        return
+    if isinstance(item, Weapon):
+        print(f"""
+{"Урон:":<20}{item.damage}
+{"Вес:":<20}{item.weight}
+{"Тип урона:":<20}{item.damage_type}
+{"Ближний бой:":<20}{"Да" if item.can_melee else "Нет"}
+{"Дальний бой:":<20}{"Да" if item.can_ranged else "Нет"}
+""")
+
+    action = "Экипировать" if isinstance(item, Weapon) else "Использовать"
+
+    print(f"""
+Описание:
+{item.description}
+
+1. {action}
+2. Назад
+========================================
+""")
+
+    choice = input("Выбери действие: ")
+
+    if choice == "1":
+        if isinstance(item, Weapon):
+            equip_item(player, slot_index)
+            return True
+
+        return use_item(player, slot_index)
+
+    if choice != "2":
+        print("Ошибка ввода: необходимо выбрать 1 или 2.")
+
+    return False
+
+
+def use_item(player, slot_index):
+    """Использует обычный предмет из выбранного слота."""
+
+    item = player.inventory.slots[slot_index]
+
+    if item.heal is not None:
+        if player.health >= player.max_health:
+            print("\nЗдоровье уже полностью восстановлено.")
+            return False
+
+        old_health = player.health
+        player.health = min(
+            player.health + item.heal,
+            player.max_health,
+        )
+        restored = player.health - old_health
+
+        item.use()
+
+        print(
+            f"\n{item.name} использовано."
+            f"\nВосстановлено здоровья: {restored}"
+            f"\nОЗ: {player.health}/{player.max_health}"
+        )
+
+        if item.durability == 0:
+            player.inventory.slots[slot_index] = None
+
+        return True
+
+    print("Для этого предмета пока нет доступного действия.")
+    return False
+
+
+def equip_item(player, slot_index):
+    """
+    Меняет выбранный предмет в инвентаре с предметом в руках.
+    """
+    item = player.inventory.slots[slot_index]
 
     player.inventory.slots[slot_index] = player.hands
     player.hands = item
 
-    print(f"\nОружие «{player.hands.name}» экипировано.")
+    print(f"\nПредмет «{player.hands.name}» экипирован.")
+
+
+def handle_empty_slot(player, slot_index):
+    """
+    Обрабатывает выбор пустого слота инвентаря.
+
+    Возвращает:
+        bool: True, если предмет был помещён в слот.
+        Иначе False.
+    """
+    if player.hands is None:
+        print("\nЭта ячейка пуста, и в руках ничего нет.")
+        input("Нажми Enter, чтобы продолжить.")
+        return False
+
+    print(f"""
+Ячейка пуста.
+В руках: {player.hands.name}
+
+1. Положить предмет сюда
+2. Назад
+""")
+
+    choice = input("Выбери действие: ")
+
+    if choice == "1":
+        player.inventory.slots[slot_index] = player.hands
+        player.hands = None
+
+        print(f"\nПредмет «{player.inventory.slots[slot_index].name}» " f"помещён в ячейку {slot_index + 1}.")
+        return True
+
+    if choice != "2":
+        print("Ошибка ввода: необходимо выбрать 1 или 2.")
+
+    return False
 
 
 def show_main_menu():
     """
-    Выводит главное меню игры.
+    Выводит главное меню игры и возвращает выбранное действие.
     """
     print("""
 ========================================

@@ -2,7 +2,7 @@ import random
 
 from src.characters import CHARACTER_CLASSES, STARTING_WEAPONS
 from src.item_data import ITEM_DATA
-from src.items import Weapon
+from src.items import Item, Weapon
 from src.progression import set_level
 
 
@@ -21,6 +21,12 @@ def create_item(item_id):
 
     if item_type == "weapon":
         return Weapon(
+            item_id=item_id,
+            **item_data,
+        )
+
+    if item_type == "item":
+        return Item(
             item_id=item_id,
             **item_data,
         )

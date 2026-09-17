@@ -1,10 +1,10 @@
 from src.battle import battle_loop
-from src.factories import create_enemy, create_player
+from src.factories import create_enemy, create_player, create_item
 from src.persistence import load_character, save_character
-from src.ui import (create_player_from_input, show_inventory, show_main_menu,
-                    show_statistics)
+from src.ui import create_player_from_input, show_inventory, show_main_menu, show_statistics
 
 player = load_character()
+player.inventory.slots[1] = create_item("healing_potion")
 
 print("""
 Добро пожаловать в виртуальный мир, дорогой искатель приключений!

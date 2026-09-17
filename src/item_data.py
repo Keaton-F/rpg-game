@@ -2,7 +2,9 @@ ITEM_DATA = {
     "axe": {
         "type": "weapon",
         "name": "Топор",
+        "description": "Тяжёлое оружие с высоким уроном, но большим весом.",
         "durability": 40,
+        "max_durability": 40,
         "damage": 6,
         "weight": 4,
         "damage_type": "physical",
@@ -12,7 +14,9 @@ ITEM_DATA = {
     "spear": {
         "type": "weapon",
         "name": "Копьё",
+        "description": "Универсальное оружие с хорошим балансом между уроном и весом.",
         "durability": 40,
+        "max_durability": 40,
         "damage": 5,
         "weight": 3,
         "damage_type": "physical",
@@ -22,7 +26,9 @@ ITEM_DATA = {
     "sword": {
         "type": "weapon",
         "name": "Меч",
+        "description": "Лёгкое и удобное оружие для ближнего боя.",
         "durability": 40,
+        "max_durability": 40,
         "damage": 4,
         "weight": 2,
         "damage_type": "physical",
@@ -32,7 +38,9 @@ ITEM_DATA = {
     "bow": {
         "type": "weapon",
         "name": "Лук",
+        "description": "Оружие дальнего боя, позволяющее атаковать противника на расстоянии.",
         "durability": 30,
+        "max_durability": 30,
         "damage": 4,
         "weight": 1,
         "damage_type": "physical",
@@ -42,7 +50,9 @@ ITEM_DATA = {
     "light_tome": {
         "type": "weapon",
         "name": "Фолиант «Луч света»",
+        "description": "Магический фолиант со светлой атакующей магией.",
         "durability": 35,
+        "max_durability": 35,
         "damage": 4,
         "weight": 1,
         "damage_type": "magical",
@@ -52,7 +62,9 @@ ITEM_DATA = {
     "dark_tome": {
         "type": "weapon",
         "name": "Фолиант «Теневое удушение»",
+        "description": "Тяжёлый фолиант с мощной тёмной магией.",
         "durability": 35,
+        "max_durability": 35,
         "damage": 7,
         "weight": 4,
         "damage_type": "magical",
@@ -62,11 +74,21 @@ ITEM_DATA = {
     "fire_tome": {
         "type": "weapon",
         "name": "Фолиант «Огненный шар»",
+        "description": "Фолиант с заклинанием огненной атаки.",
         "durability": 35,
+        "max_durability": 35,
         "damage": 5,
         "weight": 2,
         "damage_type": "magical",
         "can_melee": True,
         "can_ranged": True,
+    },
+    "healing_potion": {
+        "type": "item",
+        "name": "Зелье лечения",
+        "description": "Восстанавливает 10 единиц здоровья.",
+        "durability": 3,
+        "max_durability": 3,
+        "heal": 10,
     },
 }

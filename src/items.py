@@ -1,7 +1,19 @@
 class Item:
-    def __init__(self, name, durability):
+    def __init__(
+        self,
+        item_id,
+        name,
+        durability,
+        max_durability,
+        description,
+        heal=None,
+    ):
+        self.item_id = item_id
         self.name = name
         self.durability = durability
+        self.max_durability = max_durability
+        self.description = description
+        self.heal = heal
 
     def use(self):
         self.durability = max(self.durability - 1, 0)
@@ -19,15 +31,22 @@ class Weapon(Item):
         item_id,
         name,
         durability,
+        max_durability,
+        description,
         damage,
         weight,
         damage_type,
         can_melee,
         can_ranged,
     ):
-        super().__init__(name, durability)
+        super().__init__(
+            item_id,
+            name,
+            durability,
+            max_durability,
+            description,
+        )
 
-        self.item_id = item_id
         self.damage = damage
         self.weight = weight
         self.damage_type = damage_type

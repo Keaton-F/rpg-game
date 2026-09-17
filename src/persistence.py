@@ -33,9 +33,7 @@ def load_character():
 
         inventory_data = character_data["inventory"]
 
-        character.inventory.slots = [
-            create_item_from_data(item_data) for item_data in inventory_data["slots"]
-        ]
+        character.inventory.slots = [create_item_from_data(item_data) for item_data in inventory_data["slots"]]
 
         return character
 
